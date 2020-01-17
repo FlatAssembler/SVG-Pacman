@@ -24,10 +24,10 @@ CSS (inline na nekoliko mjesta) - https://www.w3schools.com/css/default.asp
     <body>
         <?php
         $datoteka=fopen("pachigh.txt","r");
-        $highscore=fgets($datoteka);
+        $highscore=fgets($datoteka)*1;
         $player=fgets($datoteka);
         fclose($datoteka);
-        if (strpos($player," ") || strpos($player,"<") || strpos($player,">") || strpos($player,"&") || strpos($player,"\t") || strpos($player,"&gt;"))
+        if (strpos($player," ") || strpos($player,"<") || strpos($player,">") || strpos($player,"&") || strpos($player,"\t") || strpos($player,"&gt;") || strlen($player)==0)
             $player="anonymous";
         ?>
         <center>
