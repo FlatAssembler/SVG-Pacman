@@ -87,7 +87,7 @@ CSS (inline na nekoliko mjesta) - https://www.w3schools.com/css/default.asp
         </svg>
 		<br>
 <div id="bodovi" style="width:300px; line-height:50px; font-family: Lucida; background-color: yellow; text-align:center; margin-bottom:5px;">Highscore: <i><?php echo $highscore; ?></i> by <i><?php echo $player; ?></i>.</div>
-The game does NOT respond to keyboard buttons. On smartphones, the Pacman is supposed to follow your finger, to go in the direction where you last tapped. In case that doesn't work, you have buttons below the maze. On computers, it's playable by mouse.<br/>You can see the source code, with the comments in Croatian, <a href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.html">here</a>.
+The game does NOT respond to keyboard buttons. On smartphones, the Pacman is supposed to follow your finger, to go in the direction where you last tapped. In case that doesn't work, you have buttons below the maze. On computers, it's playable by mouse.<br/>You can see the source code, with the comments in Croatian, <a href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.php">here</a>.
         </center>
         <script type="text/javascript">
             window.setTimeout(function(){document.body.removeChild(document.body.children[document.body.children.length-1]);},1000); //Ukloni "Powered by 000webhost", da ne smeta na smartphonima.
