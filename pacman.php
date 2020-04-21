@@ -32,7 +32,7 @@ CSS (inline na nekoliko mjesta) - https://www.w3schools.com/css/default.asp
             || strlen($player)==0)
             $player="anonymous";
         ?>
-		<button id="startButton" style="background-color:red;top:270px;color:yellow;font-size:36px;width:200px; position:fixed; left:calc(50% - 100px)" onclick="onStartButton()">START!</button>
+		<button id="startButton" style="background-color:red;top:270px;color:yellow;font-size:36px;width:200px; position:absolute; left:calc(50% - 100px)" onclick="onStartButton()">START!</button>
         <center>
         <svg width=300 height=450 style="background:black;" id="zaslon">
         <defs>
