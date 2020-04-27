@@ -81,9 +81,9 @@ CSS (inline na nekoliko mjesta) - https://www.w3schools.com/css/default.asp
         $highscore=intval(fgets($datoteka));
         $player=fgets($datoteka);
         fclose($datoteka);
-        if (strpos($player," ") || strpos($player,"<") || strpos($player,">") ||
-            strpos($player,"&") || strpos($player,"\t") || strpos($player,"&gt;")
-            || strlen($player)==0)
+        if (strpos($player," ")!==FALSE || strpos($player,"<")!==FALSE || strpos($player,">")!==FALSE ||
+            strpos($player,"&")!==FALSE || strpos($player,"\t")!==FALSE || strpos($player,"\"")!==FALSE || //https://codereview.stackexchange.com/questions/241268/pacman-in-javascript-and-svg
+            strpos($player,"=")!==FALSE || strlen($player)==0)
             $player="anonymous";
         ?>
 		<button id="startButton" onclick="onStartButton()">START!</button>
@@ -539,7 +539,7 @@ CSS (inline na nekoliko mjesta) - https://www.w3schools.com/css/default.asp
                                 do {
                                     player=window.prompt("Enter your name, new highscore! Your name mustn't contain whitespaces or special characters.","player");
                                 }
-                                while (player && (player.indexOf("<")+1 || player.indexOf(">")+1 || player.indexOf("&")+1 || player.indexOf(" ")+1));
+                                while (player && (player.indexOf("<")+1 || player.indexOf(">")+1 || player.indexOf("&")+1 || player.indexOf(" ")+1 || player.indexOf("\"")+1 || player.indexOf("=")+1));
                                 if (player==null)
                                     player="anonymous";
                                 var hash=7;
