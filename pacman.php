@@ -1,9 +1,8 @@
 <?php
-    $browser=$_SERVER['HTTP_USER_AGENT'];
-    if (substr($browser,0,strlen("Opera"))!=="Opera" &&
-               substr($browser,0,strlen("Mozilla/5.0"))!=="Mozilla/5.0")
-        exit("Please access this URL with a proper browser!\n");
-    ?>
+$browser = $_SERVER['HTTP_USER_AGENT'];
+if (substr($browser, 0, strlen("Opera")) !== "Opera" && substr($browser, 0, strlen("Mozilla/5.0")) !== "Mozilla/5.0")
+    exit("Please access this URL with a proper browser!\n");
+?>
 <!--
 Koristeni programski jezici i preporuceni materijali za ucenje:
 Javacript - https://www.w3schools.com/js/default.asp
@@ -13,137 +12,157 @@ HTML - https://www.w3schools.com/html/default.asp
 CSS (inline na nekoliko mjesta) - https://www.w3schools.com/css/default.asp
 -->
 <html lang="en">
-    <head>
-        <title>PacMan in Javacript</title>
-        <meta name="author" content="Teo Samarzija">
-        <meta name="description" content="A PacMan game made using SVG and JavaScript, playable on most smartphones.">
-        <meta name="keywords" content="Retrocomputing, HTML5, PacMan, SVG, JavaScript">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+<head>
+<title>PacMan in Javacript</title>
+<meta name="author" content="Teo Samarzija">
+<meta name="description"
+	content="A PacMan game made using SVG and JavaScript, playable on most smartphones.">
+<meta name="keywords"
+	content="Retrocomputing, HTML5, PacMan, SVG, JavaScript">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, user-scalable=0">
 <!-- Sprijeci zoomiranje na smartphonima (ako netko slucajno dodirne neko mjesto u labirintu dvaput umjesto jedanput). -->
-        <style type="text/css">
-        #natpis { /*CSS od natpisa za novi level.*/
-            position:absolute;
-            background-color:#AAFFFF;
-            color:red;
-            top:180px;
-            width:200px;
-            height:50px;
-            border-radius:100%; /*Neka bude u obliku elipse.*/
-            text-align:center;
-            font-family:Arial;
-            font-size:24px;
-            line-height:50px;
-        }
-        #startButton {
-            background-color:red;
-            top:275px;
-            color:yellow;
-            font-size:36px;
-            width:200px;
-            position:absolute;
-            left:-webkit-calc(50% - (200px / 2)); /*Za Android Stock Browser 4 i Safari 6, oni nece parsirati "calc" ako ne stavimo prefiks.*/
-            left:calc(50% - (200px / 2));
-        }
-        #zaslon {
-            background:black;
-            display:block;
-            width: 300px;
-            height: 450px;
-            border:0px;
-            margin-bottom: 0px;
-            overflow: hidden; /*Inace ce u Internet Exploreru 11 duhovi doci na bijelu pozadinu kad prolaze kroz onaj prolaz sa strane.*/
-        }
-        #bodovi { /*Zuti pravokutnik na kojem pise highscore.*/
-            position: absolute;
-            top:458px;
-            width:300px;
-            line-height:50px;
-            font-family: Lucida;
-            background-color: yellow;
-            text-align:center;
-            margin-bottom:5px;
-            margin-top:0px;
-            left:-webkit-calc(50% - (300px / 2));
-            left:calc(50% - (300px / 2)); 
-        }
-        #instructions {
-            position: absolute;
-            top:-webkit-calc(458px + 50px + 5px);
-            top:calc(458px + 50px + 5px);
-            width:-webkit-calc(100% - 2 * 8px);
-            width:calc(100% - 2 * 8px);
-        }
-        </style>
-    </head>
-    <body>
+<style type="text/css">
+#natpis { /*CSS od natpisa za novi level.*/
+	position: absolute;
+	background-color: #AAFFFF;
+	color: red;
+	top: 180px;
+	width: 200px;
+	height: 50px;
+	border-radius: 100%; /*Neka bude u obliku elipse.*/
+	text-align: center;
+	font-family: Arial;
+	font-size: 24px;
+	line-height: 50px;
+}
+
+#startButton {
+	background-color: red;
+	top: 275px;
+	color: yellow;
+	font-size: 36px;
+	width: 200px;
+	position: absolute;
+	left: -webkit-calc(50% - ( 200px/ 2));
+	/*Za Android Stock Browser 4 i Safari 6, oni nece parsirati "calc" ako ne stavimo prefiks.*/
+	left: calc(50% - ( 200px/ 2));
+}
+
+#zaslon {
+	background: black;
+	display: block;
+	width: 300px;
+	height: 450px;
+	border: 0px;
+	margin-bottom: 0px;
+	overflow: hidden;
+	/*Inace ce u Internet Exploreru 11 duhovi doci na bijelu pozadinu kad prolaze kroz onaj prolaz sa strane.*/
+}
+
+#bodovi { /*Zuti pravokutnik na kojem pise highscore.*/
+	position: absolute;
+	top: 458px;
+	width: 300px;
+	line-height: 50px;
+	font-family: Lucida;
+	background-color: yellow;
+	text-align: center;
+	margin-bottom: 5px;
+	margin-top: 0px;
+	left: -webkit-calc(50% - ( 300px/ 2));
+	left: calc(50% - ( 300px/ 2));
+}
+
+#instructions {
+	position: absolute;
+	top: -webkit-calc(458px + 50px + 5px);
+	top: calc(458px + 50px + 5px);
+	width: -webkit-calc(100% - 2 * 8px);
+	width: calc(100% - 2 * 8px);
+}
+</style>
+</head>
+<body>
         <?php
-        $datoteka=fopen("pachigh.txt","r");
-        $highscore=intval(fgets($datoteka));
-        $player=fgets($datoteka);
+        $datoteka = fopen("pachigh.txt", "r");
+        $highscore = intval(fgets($datoteka));
+        $player = fgets($datoteka);
         fclose($datoteka);
-        if (strpos($player," ")!==FALSE || strpos($player,"<")!==FALSE || strpos($player,">")!==FALSE ||
-            strpos($player,"&")!==FALSE || strpos($player,"\t")!==FALSE || strpos($player,"\"")!==FALSE || //https://codereview.stackexchange.com/questions/241268/pacman-in-javascript-and-svg
-            strpos($player,"=")!==FALSE || strlen($player)==0)
-            $player="anonymous";
+        if (strpos($player, " ") !== FALSE || strpos($player, "<") !== FALSE || strpos($player, ">") !== FALSE || strpos($player, "&") !== FALSE || strpos($player, "\t") !== FALSE || strpos($player, "\"") !== FALSE || // https://codereview.stackexchange.com/questions/241268/pacman-in-javascript-and-svg
+        strpos($player, "=") !== FALSE || strlen($player) == 0)
+            $player = "anonymous";
         ?>
 		<button id="startButton" onclick="onStartButton()">START!</button>
-        <center>
-        <svg id="zaslon">
+	<center>
+		<svg id="zaslon">
         <defs>
-        <linearGradient id="leftGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+        <linearGradient id="leftGradient" x1="0%" x2="100%" y1="0%"
+				y2="0%">
         <!-- Boja lijeve tipke. -->
-        <stop offset="0%" stop-color="gray"/>
-        <stop offset="100%" stop-color="white"/>
+        <stop offset="0%" stop-color="gray" />
+        <stop offset="100%" stop-color="white" />
         </linearGradient>
-        <linearGradient id="rightGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+        <linearGradient id="rightGradient" x1="0%" x2="100%" y1="0%"
+				y2="0%">
         <!-- Boja desne tipke. -->
-        <stop offset="0%" stop-color="white"/>
-        <stop offset="100%" stop-color="gray"/>
+        <stop offset="0%" stop-color="white" />
+        <stop offset="100%" stop-color="gray" />
         </linearGradient>
-        <linearGradient id="upGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+        <linearGradient id="upGradient" x1="0%" x2="0%" y1="0%"
+				y2="100%">
         <!-- Boja gornje tipke. -->
-        <stop offset="0%" stop-color="gray"/>
-        <stop offset="100%" stop-color="white"/>
+        <stop offset="0%" stop-color="gray" />
+        <stop offset="100%" stop-color="white" />
         </linearGradient>
-        <linearGradient id="downGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+        <linearGradient id="downGradient" x1="0%" x2="0%" y1="0%"
+				y2="100%">
         <!-- Boja donje tipke. -->
-        <stop offset="0%" stop-color="white"/>
-        <stop offset="100%" stop-color="gray"/>
+        <stop offset="0%" stop-color="white" />
+        <stop offset="100%" stop-color="gray" />
         </linearGradient>
         </defs>
-        <rect x=130 y=360
-              fill="url(#upGradient)"
-              onMouseOver="this.style.fill = 'lightGray'"
-              onMouseOut="this.style.fill = 'url(#upGradient)'"
-              width=40 height=40 onClick="onButtonUp()"></rect>
+        <rect x=130 y=360 fill="url(#upGradient)"
+				onMouseOver="this.style.fill = 'lightGray'"
+				onMouseOut="this.style.fill = 'url(#upGradient)'" width=40 height=40
+				onClick="onButtonUp()"></rect>
         <!-- Gornja tipka -->
-        <rect x=85 y=405
-              fill="url(#leftGradient)"
-              onMouseOver="this.style.fill = 'lightGray'"
-              onMouseOut="this.style.fill = 'url(#leftGradient)'"
-              width=40 height=40 onClick="onButtonLeft()"></rect>
+        <rect x=85 y=405 fill="url(#leftGradient)"
+				onMouseOver="this.style.fill = 'lightGray'"
+				onMouseOut="this.style.fill = 'url(#leftGradient)'" width=40
+				height=40 onClick="onButtonLeft()"></rect>
         <!-- Lijeva tipka -->
-        <rect x=130 y=405
-              fill="url(#downGradient)"
-              onMouseOver="this.style.fill = 'lightGray'"
-              onMouseOut="this.style.fill = 'url(#downGradient)'"
-              width=40 height=40 onClick="onButtonDown()"></rect>
+        <rect x=130 y=405 fill="url(#downGradient)"
+				onMouseOver="this.style.fill = 'lightGray'"
+				onMouseOut="this.style.fill = 'url(#downGradient)'" width=40
+				height=40 onClick="onButtonDown()"></rect>
         <!-- Donja tipka -->
-        <rect x=175 y=405
-              fill="url(#rightGradient)"
-              onMouseOver="this.style.fill = 'lightGray'"
-              onMouseOut="this.style.fill = 'url(#rightGradient)'"
-              width=40 height=40 onClick="onButtonRight()"></rect>
+        <rect x=175 y=405 fill="url(#rightGradient)"
+				onMouseOver="this.style.fill = 'lightGray'"
+				onMouseOut="this.style.fill = 'url(#rightGradient)'" width=40
+				height=40 onClick="onButtonRight()"></rect>
         <!-- Desna tipka -->
         <text x=175 y=385 fill="white"
-              style="font-size: 18px; font-family:'Lucida Console'"
-              id="score">Score: 0</text>
+				style="font-size: 18px; font-family:'Lucida Console'" id="score">Score: 0</text>
         </svg>
 		<br>
-<div id="bodovi" style="">Highscore: <i><?php echo $highscore; ?></i> by <i><?php echo $player; ?></i>.</div>
-<div id="instructions">The game does NOT respond to keyboard buttons. On smartphones, the Pacman is supposed to follow your finger, to go in the direction where you last tapped. In case that doesn't work, you have buttons below the maze. On computers, it's playable by mouse.<br/>You can see the source code, with the comments in Croatian, <a href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.php">here</a>.<noscript><br/>Of course, nothing of this can work without JavaScript enabled in your browser.</noscript></div>
-        </center>
-        <script type="text/javascript">
+		<div id="bodovi" style="">
+			Highscore: <i><?php echo $highscore; ?></i> by <i><?php echo $player; ?></i>.
+		</div>
+		<div id="instructions">
+			The game does NOT respond to keyboard buttons. On smartphones, the
+			Pacman is supposed to follow your finger, to go in the direction
+			where you last tapped. In case that doesn't work, you have buttons
+			below the maze. On computers, it's playable by mouse.<br />You can
+			see the source code, with the comments in Croatian, <a
+				href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.php">here</a>.
+			<noscript>
+				<br />Of course, nothing of this can work without JavaScript enabled
+				in your browser.
+			</noscript>
+		</div>
+	</center>
+	<script type="text/javascript">
             if (document.getElementById("startButton").offsetLeft<=document.getElementById("zaslon").offsetLeft) { //Safari 5, recimo, ne podrzava CSS-ovu naredbu "calc", ali podrzava dovoljno JavaScripta i SVG-a da pokrene ovaj PacMan. Zato cemo tamo CSS-ov "calc" simulirati u JavaScriptu.
                 window.onresize=function() {
                     var sredinaEkrana=document.body.clientWidth/2;
@@ -779,5 +798,5 @@ CSS (inline na nekoliko mjesta) - https://www.w3schools.com/css/default.asp
                            },2000); //Neka se glavna i animacijska petlja pocnu vrtiti nakon 2000 milisekunda od trenutka kada prijedemo na novi level.
             }
         </script>
-    </body>
+</body>
 </html>
