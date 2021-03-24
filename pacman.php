@@ -161,7 +161,9 @@ CSS - https://www.w3schools.com/css/default.asp
 			where you last tapped. In case that doesn't work, you have buttons
 			below the maze. On computers, it's playable by mouse.<br />You can
 			see the source code, with the comments in Croatian, <a
-				href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.php">here</a>.
+				href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.php">here</a>.<br/>
+				<b>UPDATE</b> on 24/03/2021: I have added eyes on the ghosts,
+        but that works only in Firefox.
 			<noscript>
 				<br />Of course, nothing of this can work without JavaScript enabled
 				in your browser.
@@ -332,9 +334,10 @@ CSS - https://www.w3schools.com/css/default.asp
           krug.setAttribute("id", id);
           zaslon.appendChild(krug);
         }
-        function drawGhost(x, y, color, id, transparent) {
-          //Duhovi su geometrijski likovi omedeni crtama (dno) i kubicnom Bezierovom krivuljom (vrh).
-	  var svg = document.createElementNS(XML_namespace_of_SVG, "svg");
+      function drawGhost(x, y, color, id, transparent) {
+        //Duhovi su geometrijski likovi omedeni crtama (dno) i kubicnom Bezierovom krivuljom (vrh).
+        if (/Firefox/.test(navigator.userAgent)) {
+          var svg = document.createElementNS(XML_namespace_of_SVG, "svg");
           svg.setAttribute("x", x - 8);
           svg.setAttribute("y", y - 16);
           var path = document.createElementNS(XML_namespace_of_SVG, "path");
@@ -354,28 +357,54 @@ CSS - https://www.w3schools.com/css/default.asp
             " " +
             (16 + 8);
           d += " l -4 -3 l -4 3 l -4 -3 Z";
-       	 path.setAttribute("d", d);
-         svg.setAttribute("id", id);
-         if (transparent) svg.setAttribute("fill-opacity", 0.5); //Siluete (bijeli duhovi).
-         svg.appendChild(path);
-         var left_eye = document.createElementNS(XML_namespace_of_SVG, "circle");
-         left_eye.setAttribute("cx", 5);
-         left_eye.setAttribute("cy", 15);
-         left_eye.setAttribute("r", 2);
-         left_eye.setAttribute("fill", "black");
-         svg.appendChild(left_eye);
-         var right_eye = document.createElementNS(
-           XML_namespace_of_SVG,
-           "circle"
-         );
-         right_eye.setAttribute("cx", 11);
-         right_eye.setAttribute("cy", 15);
-         right_eye.setAttribute("r", 2);
-         right_eye.setAttribute("fill", "black");
-         svg.appendChild(right_eye);
-         zaslon.appendChild(svg);
+          path.setAttribute("d", d);
+          svg.setAttribute("id", id);
+          if (transparent) svg.setAttribute("fill-opacity", 0.5); //Siluete (bijeli duhovi).
+          svg.appendChild(path);
+          var left_eye = document.createElementNS(
+            XML_namespace_of_SVG,
+            "circle"
+          );
+          left_eye.setAttribute("cx", 5);
+          left_eye.setAttribute("cy", 15);
+          left_eye.setAttribute("r", 2);
+          left_eye.setAttribute("fill", "black");
+          svg.appendChild(left_eye);
+          var right_eye = document.createElementNS(
+            XML_namespace_of_SVG,
+            "circle"
+          );
+          right_eye.setAttribute("cx", 11);
+          right_eye.setAttribute("cy", 15);
+          right_eye.setAttribute("r", 2);
+          right_eye.setAttribute("fill", "black");
+          svg.appendChild(right_eye);
+          zaslon.appendChild(svg);
+        } else {
+          var path = document.createElementNS(XML_namespace_of_SVG, "path");
+          path.setAttribute("fill", color);
+          var d = "M " + (x - 8) + " " + (y + 8);
+          d +=
+            "C " +
+            (x - 5) +
+            " " +
+            (y - 16) +
+            " " +
+            (x + 5) +
+            " " +
+            (y - 16) +
+            " " +
+            (x + 8) +
+            " " +
+            (y + 8);
+          d += " l -4 -3 l -4 3 l -4 -3 Z";
+          path.setAttribute("d", d);
+          path.setAttribute("id", id);
+          if (transparent) path.setAttribute("fill-opacity", 0.5); //Siluete (bijeli duhovi).
+          zaslon.appendChild(path);
         }
-        function drawGhosts() {
+      }
+      function drawGhosts() {
           for (var i = 0; i < 3; i++) {
             if (
               jeLiPacmanPojeoDuha[i] &&
