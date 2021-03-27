@@ -44,9 +44,9 @@ CSS - https://www.w3schools.com/css/default.asp
                 font-size: 36px;
                 width: 200px;
                 position: absolute;
-                left: -webkit-calc(50% - ( 200px/ 2));
+                left: -webkit-calc(50% - ( 200px / 2));
                 /*Za Android Stock Browser 4 i Safari 6, oni nece parsirati "calc" ako ne stavimo prefiks.*/
-                left: calc(50% - ( 200px/ 2));
+                left: calc(50% - ( 200px / 2));
             }
 
             #zaslon {
@@ -79,8 +79,9 @@ CSS - https://www.w3schools.com/css/default.asp
                 position: absolute;
                 top: -webkit-calc(458px + 50px + 5px);
                 top: calc(458px + 50px + 5px);
-                width: -webkit-calc(100% - 2 * 8px);
-                width: calc(100% - 2 * 8px);
+                width: -webkit-calc(100% - 2 * 16px);
+                width: calc(100% - 2 * 16px);
+                margin-bottom: 20px;
             }
         </style>
     </head>
@@ -165,8 +166,10 @@ CSS - https://www.w3schools.com/css/default.asp
             below the maze. On computers, it's playable by mouse.<br />You can
             see the source code, with the comments in Croatian, <a
                 href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.php">here</a>.<br/>
-            <b>UPDATE</b> on 24/03/2021: I have added eyes on the ghosts,
-            but that works only in Firefox.
+            <b>UPDATE</b> on 24/03/2021: I have added eyes on the ghosts<del>,
+                but that works only in Firefox</del>.<br />
+            <b>UPDATE</b> on 27/03/2021: The eyes of the ghosts no longer rely
+            on the Firefox-specific SVG features.
             <noscript>
             <br />Of course, nothing of this can work without JavaScript enabled
             in your browser.
@@ -188,7 +191,7 @@ CSS - https://www.w3schools.com/css/default.asp
                 bodovi.style.left = sredinaEkrana - 150 + "px";
                 var instructions = document.getElementById("instructions");
                 instructions.style.top = 458 + 50 + 5 + "px";
-                instructions.style.width = sredinaEkrana * 2 - 2 * 8 + "px";
+                instructions.style.width = sredinaEkrana * 2 - 2 * 16 + "px";
             };
             window.onresize();
         }
@@ -340,75 +343,50 @@ CSS - https://www.w3schools.com/css/default.asp
         }
         function drawGhost(x, y, color, id, transparent) {
             //Duhovi su geometrijski likovi omedeni crtama (dno) i kubicnom Bezierovom krivuljom (vrh).
-            if (/Firefox/.test(navigator.userAgent)) {
-                var svg = document.createElementNS(XML_namespace_of_SVG, "svg");
-                svg.setAttribute("x", x - 8);
-                svg.setAttribute("y", y - 16);
-                var path = document.createElementNS(XML_namespace_of_SVG, "path");
-                path.setAttribute("fill", color);
-                var d = "M " + 0 + " " + (16 + 8);
-                d +=
-                        "C " +
-                        3 +
-                        " " +
-                        0 +
-                        " " +
-                        (8 + 5) +
-                        " " +
-                        0 +
-                        " " +
-                        (8 + 8) +
-                        " " +
-                        (16 + 8);
-                d += " l -4 -3 l -4 3 l -4 -3 Z";
-                path.setAttribute("d", d);
-                svg.setAttribute("id", id);
-                if (transparent)
-                    svg.setAttribute("fill-opacity", 0.5); //Siluete (bijeli duhovi).
-                svg.appendChild(path);
-                var left_eye = document.createElementNS(
-                        XML_namespace_of_SVG,
-                        "circle"
-                        );
-                left_eye.setAttribute("cx", 5);
-                left_eye.setAttribute("cy", 15);
-                left_eye.setAttribute("r", 2);
-                left_eye.setAttribute("fill", "black");
-                svg.appendChild(left_eye);
-                var right_eye = document.createElementNS(
-                        XML_namespace_of_SVG,
-                        "circle"
-                        );
-                right_eye.setAttribute("cx", 11);
-                right_eye.setAttribute("cy", 15);
-                right_eye.setAttribute("r", 2);
-                right_eye.setAttribute("fill", "black");
-                svg.appendChild(right_eye);
-                zaslon.appendChild(svg);
-            } else {
-                var path = document.createElementNS(XML_namespace_of_SVG, "path");
-                path.setAttribute("fill", color);
-                var d = "M " + (x - 8) + " " + (y + 8);
-                d +=
-                        "C " +
-                        (x - 5) +
-                        " " +
-                        (y - 16) +
-                        " " +
-                        (x + 5) +
-                        " " +
-                        (y - 16) +
-                        " " +
-                        (x + 8) +
-                        " " +
-                        (y + 8);
-                d += " l -4 -3 l -4 3 l -4 -3 Z";
-                path.setAttribute("d", d);
-                path.setAttribute("id", id);
-                if (transparent)
-                    path.setAttribute("fill-opacity", 0.5); //Siluete (bijeli duhovi).
-                zaslon.appendChild(path);
-            }
+            var svg = document.createElementNS(XML_namespace_of_SVG, "g");
+            svg.setAttribute("x", x - 8);
+            svg.setAttribute("y", y - 16);
+            var path = document.createElementNS(XML_namespace_of_SVG, "path");
+            path.setAttribute("fill", color);
+            var d = "M " + (x - 8) + " " + (y + 8);
+            d +=
+                    "C " +
+                    (x - 5) +
+                    " " +
+                    (y - 16) +
+                    " " +
+                    (x + 5) +
+                    " " +
+                    (y - 16) +
+                    " " +
+                    (x + 8) +
+                    " " +
+                    (y + 8);
+            d += " l -4 -3 l -4 3 l -4 -3 Z";
+            path.setAttribute("d", d);
+            svg.setAttribute("id", id);
+            if (transparent)
+                svg.setAttribute("fill-opacity", 0.5); //Siluete (bijeli duhovi).
+            svg.appendChild(path);
+            var left_eye = document.createElementNS(
+                    XML_namespace_of_SVG,
+                    "circle"
+                    );
+            left_eye.setAttribute("cx", x - 8 + 5);
+            left_eye.setAttribute("cy", y - 16 + 15);
+            left_eye.setAttribute("r", 2);
+            left_eye.setAttribute("fill", "black");
+            svg.appendChild(left_eye);
+            var right_eye = document.createElementNS(
+                    XML_namespace_of_SVG,
+                    "circle"
+                    );
+            right_eye.setAttribute("cx", x - 8 + 11);
+            right_eye.setAttribute("cy", y - 16 + 15);
+            right_eye.setAttribute("r", 2);
+            right_eye.setAttribute("fill", "black");
+            svg.appendChild(right_eye);
+            zaslon.appendChild(svg);
         }
         function drawGhosts() {
             for (var i = 0; i < 3; i++) {
@@ -537,7 +515,8 @@ CSS - https://www.w3schools.com/css/default.asp
                 //PacMan se crta svaki put kada se ude u 'mainLoop'.
                 zaslon.removeChild(pacman);
                 zaslon.removeChild(zaslon.getElementById("usta"));
-                zaslon.removeChild(zaslon.getElementById("TouchScreenInterface"));
+                if (zaslon.getElementById("TouchScreenInterface"))
+                    zaslon.removeChild(zaslon.getElementById("TouchScreenInterface"));
             }
             if (
                     pocetnoStanjeLabirinta[
@@ -1070,6 +1049,7 @@ CSS - https://www.w3schools.com/css/default.asp
                 if (
                         jeLiPacmanPojeoDuha[i] &&
                         brojacGlavnePetlje - kadaJePacmanPojeoVelikuTocku < 30
+                        && zaslon.getElementById("bijeli" + (i + 1))
                         )
                     //Ako je PacMan nedavno pojeo duha, animiraj bijelu siluetu...
                     zaslon
@@ -1087,7 +1067,7 @@ CSS - https://www.w3schools.com/css/default.asp
                                     ")"
                                     );
                 //... inace animiraj duha.
-                else
+                else if (zaslon.getElementById("duh" + (i + 1)))
                     zaslon
                             .getElementById("duh" + (i + 1))
                             .setAttribute(
@@ -1106,88 +1086,90 @@ CSS - https://www.w3schools.com/css/default.asp
             if (hasPacmanChangedDirection == true)
                 //Nemoj animirati PacMana ukoliko on upravo mijenja smjer.
                 return;
-            zaslon
-                    .getElementById("PacMan")
-                    .setAttribute(
+            else if (zaslon.getElementById("PacMan") && zaslon.getElementById("usta")) {
+                zaslon
+                        .getElementById("PacMan")
+                        .setAttribute(
+                                "transform",
+                                "translate(" +
+                                (20 / 5) *
+                                brojacAnimacijskePetlje *
+                                xKomponentaSmjeraPacmana[smjerPacmana] +
+                                " " +
+                                (20 / 5) *
+                                brojacAnimacijskePetlje *
+                                yKomponentaSmjeraPacmana[smjerPacmana] +
+                                ")"
+                                );
+                var usta = zaslon.getElementById("usta");
+                usta.setAttribute(
+                        "transform",
+                        "translate(" +
+                        ((20 / 5) *
+                                brojacAnimacijskePetlje *
+                                xKomponentaSmjeraPacmana[smjerPacmana] +
+                                ((xKoordinataPacmana - xKomponentaSmjeraPacmana[smjerPacmana]) * 20 +
+                                        10)) +
+                        " " +
+                        ((20 / 5) *
+                                brojacAnimacijskePetlje *
+                                yKomponentaSmjeraPacmana[smjerPacmana] +
+                                (yKoordinataPacmana - yKomponentaSmjeraPacmana[smjerPacmana]) * 20 +
+                                10) +
+                        ")"
+                        );
+                if (
+                        !(
+                                (xKoordinataPacmana + yKoordinataPacmana) %
+                                2
+                                ) /*Na poljima na parnim dijagonalama ce usta biti zatvorena, a na neparnima otvorena.*/ &&
+                        (smjerPacmana == 1 || smjerPacmana == 3)
+                        )
+                    usta.setAttribute(
                             "transform",
-                            "translate(" +
-                            (20 / 5) *
-                            brojacAnimacijskePetlje *
-                            xKomponentaSmjeraPacmana[smjerPacmana] +
-                            " " +
-                            (20 / 5) *
-                            brojacAnimacijskePetlje *
-                            yKomponentaSmjeraPacmana[smjerPacmana] +
+                            usta.getAttribute("transform") +
+                            " scale(1 " +
+                            brojacAnimacijskePetlje * 0.2 +
                             ")"
                             );
-            var usta = zaslon.getElementById("usta");
-            usta.setAttribute(
-                    "transform",
-                    "translate(" +
-                    ((20 / 5) *
-                            brojacAnimacijskePetlje *
-                            xKomponentaSmjeraPacmana[smjerPacmana] +
-                            ((xKoordinataPacmana - xKomponentaSmjeraPacmana[smjerPacmana]) * 20 +
-                                    10)) +
-                    " " +
-                    ((20 / 5) *
-                            brojacAnimacijskePetlje *
-                            yKomponentaSmjeraPacmana[smjerPacmana] +
-                            (yKoordinataPacmana - yKomponentaSmjeraPacmana[smjerPacmana]) * 20 +
-                            10) +
-                    ")"
-                    );
-            if (
-                    !(
-                            (xKoordinataPacmana + yKoordinataPacmana) %
-                            2
-                            ) /*Na poljima na parnim dijagonalama ce usta biti zatvorena, a na neparnima otvorena.*/ &&
-                    (smjerPacmana == 1 || smjerPacmana == 3)
-                    )
+                else if (smjerPacmana == smjer.desno || smjerPacmana == smjer.lijevo)
+                    usta.setAttribute(
+                            "transform",
+                            usta.getAttribute("transform") +
+                            " scale(1 " +
+                            (1 - brojacAnimacijskePetlje * 0.2) +
+                            ")"
+                            );
+                else if (
+                        !((xKoordinataPacmana + yKoordinataPacmana) % 2) &&
+                        (smjerPacmana == smjer.dolje || smjerPacmana == smjer.gore)
+                        )
+                    usta.setAttribute(
+                            "transform",
+                            usta.getAttribute("transform") +
+                            " scale(" +
+                            brojacAnimacijskePetlje * 0.2 +
+                            " 1)"
+                            );
+                else if (smjerPacmana == smjer.dolje || smjerPacmana == smjer.gore)
+                    usta.setAttribute(
+                            "transform",
+                            usta.getAttribute("transform") +
+                            " scale(" +
+                            (1 - brojacAnimacijskePetlje * 0.2) +
+                            " 1)"
+                            );
+                else if (smjerPacmana == smjer.stop)
+                    //PacMan, ako se ne mice, uvijek drzi usta zatvorenima.
+                    usta.setAttribute(
+                            "transform",
+                            usta.getAttribute("transform") + " scale(1 0)"
+                            );
                 usta.setAttribute(
                         "transform",
-                        usta.getAttribute("transform") +
-                        " scale(1 " +
-                        brojacAnimacijskePetlje * 0.2 +
-                        ")"
+                        usta.getAttribute("transform") + " rotate(" + (90 * smjerPacmana - 90) + ")"
                         );
-            else if (smjerPacmana == smjer.desno || smjerPacmana == smjer.lijevo)
-                usta.setAttribute(
-                        "transform",
-                        usta.getAttribute("transform") +
-                        " scale(1 " +
-                        (1 - brojacAnimacijskePetlje * 0.2) +
-                        ")"
-                        );
-            else if (
-                    !((xKoordinataPacmana + yKoordinataPacmana) % 2) &&
-                    (smjerPacmana == smjer.dolje || smjerPacmana == smjer.gore)
-                    )
-                usta.setAttribute(
-                        "transform",
-                        usta.getAttribute("transform") +
-                        " scale(" +
-                        brojacAnimacijskePetlje * 0.2 +
-                        " 1)"
-                        );
-            else if (smjerPacmana == smjer.dolje || smjerPacmana == smjer.gore)
-                usta.setAttribute(
-                        "transform",
-                        usta.getAttribute("transform") +
-                        " scale(" +
-                        (1 - brojacAnimacijskePetlje * 0.2) +
-                        " 1)"
-                        );
-            else if (smjerPacmana == smjer.stop)
-                //PacMan, ako se ne mice, uvijek drzi usta zatvorenima.
-                usta.setAttribute(
-                        "transform",
-                        usta.getAttribute("transform") + " scale(1 0)"
-                        );
-            usta.setAttribute(
-                    "transform",
-                    usta.getAttribute("transform") + " rotate(" + (90 * smjerPacmana - 90) + ")"
-                    );
+            }
         }
         //Crtanje labirinta na pocetku igre.
         for (var i = 0; i < 19; i++)
@@ -1260,7 +1242,7 @@ CSS - https://www.w3schools.com/css/default.asp
         function nestajanje() {
             //Natpis o tome na kojem smo levelu ne iscezava odjednom, nego postupno.
             var natpis = document.getElementById("natpis");
-            if (kolikoJePutaDuhPromijenioSmjer < 16) {
+            if (kolikoJePutaDuhPromijenioSmjer < 16 && natpis) {
                 kolikoJePutaDuhPromijenioSmjer++;
                 natpis.style.opacity -= 1 / 15;
                 natpis.style.left =
@@ -1270,7 +1252,7 @@ CSS - https://www.w3schools.com/css/default.asp
                         kolikoJePutaDuhPromijenioSmjer +
                         "px"; //Kako natpis nestaje, polako se pomice udesno.
                 setTimeout(nestajanje, 100);
-            } else
+            } else if (typeof natpis == "object")
                 document.body.removeChild(natpis);
         }
         function showLevel() {
