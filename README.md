@@ -1,8 +1,4 @@
 # SVG-Pacman
 An SVG Pacman, scripted in JavaScript and PHP.
 
-It used to be alive, until I got banned from 000webhost for "hate speech", there: http://flatassembler.000webhostapp.com/pacman.php
-
-Now, the front-end is available here: http://flatassembler.github.io/pacman.html
-
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+You can see it alive on [SourceForge](http://svg-pacman.sourceforge.io/). Or, if it does not work (for instance, if I got a cross-site scripting attack again), you can use the front-end on [GitHub](http://flatassembler.github.io/pacman.html).
