@@ -4,8 +4,9 @@ if (array_key_exists("HTTP_USER_AGENT", $_SERVER)) {
 } else {
     $browser = "none";
 }
-if (substr($browser, 0, strlen("Opera")) !== "Opera" && substr($browser, 0, strlen("Mozilla/5.0")) !== "Mozilla/5.0")
+if (substr($browser, 0, strlen("Opera")) !== "Opera" && substr($browser, 0, strlen("Mozilla/5.0")) !== "Mozilla/5.0") {
     exit("Please access this URL with a proper browser! As far as I know, no browser in which you can actually play that PacMan has User Agent that does not start either with \"Opera\" or with \"Mozilla/5.0\".\n");
+}
 ?>
 <!--
 Koristeni programski jezici i preporuceni materijali za ucenje:
@@ -105,7 +106,11 @@ CSS - https://www.w3schools.com/css/default.asp
         $highscore = intval(fgets($datoteka));
         $player = fgets($datoteka);
         fclose($datoteka);
-        if ($highscore < 0 || $highscore > 100000) {
+        $last_character_in_player = substr($player, -1);
+        if (ctype_space($last_character_in_player)) {
+            $player = substr($player, 0, strlen($player) - 1);
+        }
+        if ($highscore < 0 || $highscore >= 100000) {
             $player = "anonymous";
             $highscore = 0;
         }
@@ -170,7 +175,7 @@ CSS - https://www.w3schools.com/css/default.asp
         </svg>
         <br>
         <div id="bodovi">
-            Highscore: <i><?php echo $highscore; ?></i> by <i><?php echo $player; ?></i>.
+            Highscore: <i><?php echo $highscore; ?></i> by <i><?php echo $player . '</i>.'; ?>
         </div>
         <div id="instructions">
             The game does NOT respond to keyboard buttons. On smartphones, the
@@ -186,8 +191,8 @@ CSS - https://www.w3schools.com/css/default.asp
             <?php if ($highscore_cannot_be_opened): ?>
                 <br/>
                 <b>Server error</b>: We were not able to create the highscore file, so highscores will probably not work!
-<?php endif;
-?>
+            <?php endif;
+            ?>
             <noscript>
             <br />Of course, nothing of this can work without JavaScript enabled
             in your browser.
