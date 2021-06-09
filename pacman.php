@@ -5,7 +5,7 @@ if (array_key_exists("HTTP_USER_AGENT", $_SERVER)) {
     $browser = "none";
 }
 if (substr($browser, 0, strlen("Opera")) !== "Opera" && substr($browser, 0, strlen("Mozilla/5.0")) !== "Mozilla/5.0") {
-    exit("Please access this URL with a proper browser! As far as I know, no browser in which you can actually play that PacMan has User Agent that does not start either with \"Opera\" or with \"Mozilla/5.0\".\n");
+    exit("Please access this URL with a proper browser! As far as I know, no browser in which you can actually play that PacMan has User Agent that does not start either with \"<code>Opera</code>\" or with \"<code>Mozilla/5.0</code>\".\n");
 }
 ?>
 <!--
@@ -110,15 +110,18 @@ CSS - https://www.w3schools.com/css/default.asp
         if (ctype_space($last_character_in_player)) {
             $player = substr($player, 0, strlen($player) - 1);
         }
+        $highscore_file_corrupt = false;
         if ($highscore < 0 || $highscore >= 100000) {
             $player = "anonymous";
             $highscore = 0;
+            $highscore_file_corrupt = true;
         }
         if (strpos($player, " ") !== FALSE || strpos($player, "<") !== FALSE ||
                 strpos($player, ">") !== FALSE || strpos($player, "&") !== FALSE || strpos($player, "\t") !== FALSE ||
                 strpos($player, "\"") !== FALSE || // https://codereview.stackexchange.com/questions/241268/pacman-in-javascript-and-svg
                 strpos($player, "=") !== FALSE || strlen($player) == 0 || strlen($player) > 12) {
             $player = "anonymous";
+            $highscore_file_corrupt = true;
         }
         ?>
         <button id="startButton" onclick="onStartButton()">START!</button>
@@ -191,6 +194,11 @@ CSS - https://www.w3schools.com/css/default.asp
             <?php if ($highscore_cannot_be_opened): ?>
                 <br/>
                 <b>Server error</b>: We were not able to create the highscore file, so highscores will probably not work!
+            <?php
+            endif;
+            if ($highscore_file_corrupt):
+                ?><br/>
+                <b>Server error</b>: The file with highscores, <code>pachigh.txt</code>, seems to be corrupt!
             <?php endif;
             ?>
             <noscript>
