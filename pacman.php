@@ -1,7 +1,11 @@
 <?php
-$browser = $_SERVER['HTTP_USER_AGENT'];
+if (array_key_exists("HTTP_USER_AGENT", $_SERVER)) {
+    $browser = $_SERVER['HTTP_USER_AGENT'];
+} else {
+    $browser = "none";
+}
 if (substr($browser, 0, strlen("Opera")) !== "Opera" && substr($browser, 0, strlen("Mozilla/5.0")) !== "Mozilla/5.0")
-    exit("Please access this URL with a proper browser!\n");
+    exit("Please access this URL with a proper browser! As far as I know, no browser in which you can actually play that PacMan has User Agent that does not start either with \"Opera\" or with \"Mozilla/5.0\".\n");
 ?>
 <!--
 Koristeni programski jezici i preporuceni materijali za ucenje:
@@ -97,10 +101,14 @@ CSS - https://www.w3schools.com/css/default.asp
         $highscore = intval(fgets($datoteka));
         $player = fgets($datoteka);
         fclose($datoteka);
+        if ($highscore < 0 || $highscore > 100000) {
+            $player = "anonymous";
+            $highscore = 0;
+        }
         if (strpos($player, " ") !== FALSE || strpos($player, "<") !== FALSE ||
                 strpos($player, ">") !== FALSE || strpos($player, "&") !== FALSE || strpos($player, "\t") !== FALSE ||
                 strpos($player, "\"") !== FALSE || // https://codereview.stackexchange.com/questions/241268/pacman-in-javascript-and-svg
-                strpos($player, "=") !== FALSE || strlen($player) == 0) {
+                strpos($player, "=") !== FALSE || strlen($player) == 0 || strlen($player) > 12) {
             $player = "anonymous";
         }
         ?>
@@ -196,11 +204,12 @@ CSS - https://www.w3schools.com/css/default.asp
             };
             window.onresize();
         }
-        window.setTimeout(function () {
-            document.body.removeChild(
-                    document.body.children[document.body.children.length - 1]
-                    );
-        }, 1000); //Ukloni "Powered by 000webhost", da ne smeta na smartphonima.
+        /*      window.setTimeout(function () {
+         document.body.removeChild(
+         document.body.children[document.body.children.length - 1]
+         );
+         }, 1000); //Ukloni "Powered by 000webhost", da ne smeta na smartphonima.
+         */
         var isGameFinished = false;
         var highscore = <?php echo "\"" . $highscore . "\";"; ?> //Ovaj podatak u JavaScript kod umece PHP program koji se vrti na serveru.
         var kolikoJePacmanuPreostaloZivota = 3,
@@ -834,7 +843,7 @@ CSS - https://www.w3schools.com/css/default.asp
                             var player;
                             do {
                                 player = window.prompt(
-                                        "Enter your name, new highscore! Your name mustn't contain whitespaces or special characters.",
+                                        "Enter your name, new highscore! Your name mustn't contain whitespaces or special characters, or be longer than 12 characters.",
                                         "player"
                                         );
                             } while (
@@ -844,7 +853,9 @@ CSS - https://www.w3schools.com/css/default.asp
                                             player.indexOf("&") + 1 ||
                                             player.indexOf(" ") + 1 ||
                                             player.indexOf('"') + 1 ||
-                                            player.indexOf("=") + 1)
+                                            player.indexOf("=") + 1 ||
+                                            player.length > 12)
+
                                     );
                             if (player == null)
                                 player = "anonymous";
@@ -854,7 +865,7 @@ CSS - https://www.w3schools.com/css/default.asp
                                 hash %= 907;
                             }
                             var submit =
-                                    "http://flatassembler.000webhostapp.com/pacHigh.php?score=" +
+                                    "https://svg-pacman.sourceforge.io/setPacmanHighscore.php?score=" +
                                     score +
                                     "&player=" +
                                     player +
