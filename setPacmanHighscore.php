@@ -11,6 +11,20 @@ if (substr($browser, 0, strlen("Opera")) !== "Opera" &&
 if (!array_key_exists('HTTP_REFERER', $_SERVER) || $_SERVER['HTTP_REFERER'] != "https://svg-pacman.sourceforge.io/") {
     exit("Your browser did not set the HTTP referer header to the URL of the PacMan game, so we cannot save your highscore. Sorry about that!\n");
 }
+session_start();
+if (!array_key_exists('first_random_number', $_SESSION) || !array_key_exists('second_random_number', $_SESSION) || !array_key_exists('sumOfRandomNumbers', $_GET) || $_GET['sumOfRandomNumbers'] != $_SESSION['first_random_number'] + $_SESSION['second_random_number']) {
+    session_destroy();
+    exit("The session does not seem to be properly set! It can be both a server error or a misconfiguration of your browser. " .
+            (
+            (array_key_exists('first_random_number', $_SESSION) && array_key_exists('second_random_number', $_SESSION) && array_key_exists('sumOfRandomNumbers', $_GET)) ?
+                    "The random numbers sent to JavaScript in \"<code>pacman.php</code>\" were"
+                    . $_SESSION['first_random_number'] . " and "
+                    . $_SESSION['second_random_number'] .
+                    ", and your browser claims the sum of them is " . $_GET['sumOfRandomNumbers'] . ". " :
+                    "") .
+            "Unfortunately, we cannot set the new highscore!");
+}
+session_destroy();
 ?>
 <html>
     <head>
@@ -18,16 +32,16 @@ if (!array_key_exists('HTTP_REFERER', $_SERVER) || $_SERVER['HTTP_REFERER'] != "
     </head>
     <body>
         Attempting to save a highscore...<br>
-        <?php
-        $player = $_GET['player'];
-        if (strpos($player, " ") !== FALSE || strpos($player, "<") !== FALSE || strpos($player, ">") !== FALSE || strpos($player, "&") !== FALSE || strlen($player) == 0 || strlen($player) > 12)
-            $player = "anonymous";
-        $score = intval($_GET['score']);
-        $datoteka = fopen("pachigh.txt", "r");
-        $current_highscore = intval(fgets($datoteka));
-        fclose($datoteka);
-        if ($score <= $current_highscore) {
-            ?>Sorry about that, but higher highscore has already been submitted!<?php
+<?php
+$player = $_GET['player'];
+if (strpos($player, " ") !== FALSE || strpos($player, "<") !== FALSE || strpos($player, ">") !== FALSE || strpos($player, "&") !== FALSE || strlen($player) == 0 || strlen($player) > 12)
+    $player = "anonymous";
+$score = intval($_GET['score']);
+$datoteka = fopen("pachigh.txt", "r");
+$current_highscore = intval(fgets($datoteka));
+fclose($datoteka);
+if ($score <= $current_highscore) {
+    ?>Sorry about that, but higher highscore has already been submitted!<?php
         } else {
             $hash1 = $_GET['hash'];
             if (is_numeric($score) && $score < 100000) {
@@ -50,11 +64,11 @@ if (!array_key_exists('HTTP_REFERER', $_SERVER) || $_SERVER['HTTP_REFERER'] != "
                         <script type="text/javascript">
                             window.close();
                         </script>
-                        <?php
-                    }
-                }
-            } else {
-                ?>
+                <?php
+            }
+        }
+    } else {
+        ?>
                 Server error!
                 <?php
             }

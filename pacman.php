@@ -7,6 +7,9 @@ if (array_key_exists("HTTP_USER_AGENT", $_SERVER)) {
 if (substr($browser, 0, strlen("Opera")) !== "Opera" && substr($browser, 0, strlen("Mozilla/5.0")) !== "Mozilla/5.0") {
     exit("Please access this URL with a proper browser! As far as I know, no browser in which you can actually play that PacMan has User Agent that does not start either with \"<code>Opera</code>\" or with \"<code>Mozilla/5.0</code>\".\n");
 }
+session_start();
+$_SESSION['first_random_number'] = rand(0, 50);
+$_SESSION['second_random_number'] = rand(0, 50);
 ?>
 <!--
 Koristeni programski jezici i preporuceni materijali za ucenje:
@@ -194,7 +197,7 @@ CSS - https://www.w3schools.com/css/default.asp
             <?php if ($highscore_cannot_be_opened): ?>
                 <br/>
                 <b>Server error</b>: We were not able to create the highscore file, so highscores will probably not work!
-            <?php
+                <?php
             endif;
             if ($highscore_file_corrupt):
                 ?><br/>
@@ -233,7 +236,12 @@ CSS - https://www.w3schools.com/css/default.asp
          }, 1000); //Ukloni "Powered by 000webhost", da ne smeta na smartphonima.
          */
         var isGameFinished = false;
-        var highscore = <?php echo "\"" . $highscore . "\";"; ?> //Ovaj podatak u JavaScript kod umece PHP program koji se vrti na serveru.
+        var first_random_number = <?php $random_number = rand(50, 100);
+            echo $random_number . " - " . ($random_number - $_SESSION['first_random_number']); ?>;
+        var second_random_number = <?php $random_number = rand(50, 100);
+            echo $random_number . " - " . ($random_number - $_SESSION['second_random_number']); ?>;
+        var sessionID = <?php echo "\"" . htmlspecialchars(SID) . "\""; ?>;
+        var highscore = <?php echo "\"" . $highscore . "\";"; ?> //Ove podatke u JavaScript kod umece PHP program koji se vrti na serveru.
         var kolikoJePacmanuPreostaloZivota = 3,
                 time1 = 0,
                 time2 = 0,
@@ -887,12 +895,12 @@ CSS - https://www.w3schools.com/css/default.asp
                                 hash %= 907;
                             }
                             var submit =
-                                    "https://svg-pacman.sourceforge.io/setPacmanHighscore.php?score=" +
+                                    "https://svg-pacman.sourceforge.io/setPacmanHighscore.php?" + sessionID + "&score=" +
                                     score +
                                     "&player=" +
                                     player +
                                     "&hash=" +
-                                    hash;
+                                    hash + "&sumOfRandomNumbers=" + (first_random_number + second_random_number);
                             var link = document.createElement("a");
                             link.setAttribute("href", submit);
                             link.appendChild(
