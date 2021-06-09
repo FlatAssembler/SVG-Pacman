@@ -40,19 +40,23 @@ if (!array_key_exists('HTTP_REFERER', $_SERVER) || $_SERVER['HTTP_REFERER'] != "
                     ?>Invalid hash!<?php
                 } else {
                     $datoteka = fopen("pachigh.txt", "w");
-                    fprintf($datoteka, "%d\n%s\n", $score, $player);
-                    fclose($datoteka);
-                    ?>
-                    Successfully saved the new highscore!
-                    <script type="text/javascript">
-                        window.close();
-                    </script>
-                    <?php
+                    if ($datoteka === FALSE) {
+                        ?>Server error: cannot open the &quot;<code>pachigh.txt</code>&quot; file for writing!<?php
+                    } else {
+                        fprintf($datoteka, "%d\n%s\n", $score, $player);
+                        fclose($datoteka);
+                        ?>
+                        Successfully saved the new highscore!
+                        <script type="text/javascript">
+                            window.close();
+                        </script>
+                        <?php
+                    }
                 }
             } else {
                 ?>
                 Server error!
-            <?php
+                <?php
             }
         }
         ?>

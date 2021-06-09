@@ -92,8 +92,12 @@ CSS - https://www.w3schools.com/css/default.asp
     </head>
     <body>
         <?php
+        $highscore_cannot_be_opened = false;
         if (!file_exists("pachigh.txt")) {
             $datoteka = fopen("pachigh.txt", "w");
+            if ($datoteka === false) {
+                $highscore_cannot_be_opened = true;
+            }
             fputs($datoteka, "0\nanonymous\n");
             fclose($datoteka);
         }
@@ -179,6 +183,11 @@ CSS - https://www.w3schools.com/css/default.asp
                 but that works only in Firefox</del>.<br />
             <b>UPDATE</b> on 27/03/2021: The eyes of the ghosts no longer rely
             on the Firefox-specific SVG features.
+            <?php if ($highscore_cannot_be_opened): ?>
+                <br/>
+                <b>Server error</b>: We were not able to create the highscore file, so highscores will probably not work!
+<?php endif;
+?>
             <noscript>
             <br />Of course, nothing of this can work without JavaScript enabled
             in your browser.
