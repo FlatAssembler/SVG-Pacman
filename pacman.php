@@ -5,7 +5,7 @@ if (array_key_exists("HTTP_USER_AGENT", $_SERVER)) {
     $browser = "none";
 }
 if (substr($browser, 0, strlen("Opera")) !== "Opera" && substr($browser, 0, strlen("Mozilla/5.0")) !== "Mozilla/5.0") {
-    exit("Please access this URL with a proper browser! As far as I know, no browser in which you can actually play that PacMan has User Agent that does not start either with \"<code>Opera</code>\" or with \"<code>Mozilla/5.0</code>\".\n");
+    exit("Please access this URL with a proper browser! As far as I know, no browser in which you can actually play that PacMan has User Agent that does not start either with \"<code>Opera</code>\" or with \"<code>Mozilla/5.0</code>\". The user agent of your browser appears to be <code>$browser</code>.\n");
 }
 session_start();
 $_SESSION['first_random_number'] = rand(0, 50);
@@ -237,9 +237,11 @@ CSS - https://www.w3schools.com/css/default.asp
          */
         var isGameFinished = false;
         var first_random_number = <?php $random_number = rand(50, 100);
-            echo $random_number . " - " . ($random_number - $_SESSION['first_random_number']); ?>;
+            echo $random_number . " - " . ($random_number - $_SESSION['first_random_number']);
+            ?>;
         var second_random_number = <?php $random_number = rand(50, 100);
-            echo $random_number . " - " . ($random_number - $_SESSION['second_random_number']); ?>;
+            echo $random_number . " - " . ($random_number - $_SESSION['second_random_number']);
+            ?>;
         var sessionID = <?php echo "\"" . htmlspecialchars(SID) . "\""; ?>;
         var highscore = <?php echo "\"" . $highscore . "\";"; ?> //Ove podatke u JavaScript kod umece PHP program koji se vrti na serveru.
         var kolikoJePacmanuPreostaloZivota = 3,
@@ -895,7 +897,7 @@ CSS - https://www.w3schools.com/css/default.asp
                                 hash %= 907;
                             }
                             var submit =
-                                    "https://svg-pacman.sourceforge.io/setPacmanHighscore.php?" + sessionID + "&score=" +
+                                    "setPacmanHighscore.php?" + sessionID + "&score=" +
                                     score +
                                     "&player=" +
                                     player +

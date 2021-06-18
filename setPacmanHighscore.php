@@ -6,10 +6,11 @@ if (array_key_exists("HTTP_USER_AGENT", $_SERVER)) {
 }
 if (substr($browser, 0, strlen("Opera")) !== "Opera" &&
         substr($browser, 0, strlen("Mozilla/5.0")) !== "Mozilla/5.0") {
-    exit("Please access this URL with a proper browser! As far as I know, no browser in which you can actually play that PacMan has User Agent that does not start either with \"Opera\" or with \"Mozilla/5.0\".\n");
+    exit("Please access this URL with a proper browser! As far as I know, no browser in which you can actually play that PacMan has User Agent that does not start either with \"Opera\" or with \"Mozilla/5.0\". Your browser identified itself to this server as \"$browser\".\n");
 }
-if (!array_key_exists('HTTP_REFERER', $_SERVER) || $_SERVER['HTTP_REFERER'] != "https://svg-pacman.sourceforge.io/") {
-    exit("Your browser did not set the HTTP referer header to the URL of the PacMan game, so we cannot save your highscore. Sorry about that!\n");
+$pacman_url = ((empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') ? 'http://' : 'https://') . $_SERVER['SERVER_NAME'] . "/pacman.php";
+if (!array_key_exists('HTTP_REFERER', $_SERVER) || $_SERVER['HTTP_REFERER'] != $pacman_url) {
+    exit("Your browser did not set the HTTP referer header to the URL of the PacMan game, so we cannot save your highscore. Sorry about that! The expected HTTP referer header was \"$pacman_url\", whereas your browser sent \"" . (!array_key_exists('HTTP_REFERER', $_SERVER) ? "" : $_SERVER['HTTP_REFERER']) . "\".\n");
 }
 session_start();
 if (!array_key_exists('first_random_number', $_SESSION) || !array_key_exists('second_random_number', $_SESSION) || !array_key_exists('sumOfRandomNumbers', $_GET) || $_GET['sumOfRandomNumbers'] != $_SESSION['first_random_number'] + $_SESSION['second_random_number']) {
@@ -32,16 +33,16 @@ session_destroy();
     </head>
     <body>
         Attempting to save a highscore...<br>
-<?php
-$player = $_GET['player'];
-if (strpos($player, " ") !== FALSE || strpos($player, "<") !== FALSE || strpos($player, ">") !== FALSE || strpos($player, "&") !== FALSE || strlen($player) == 0 || strlen($player) > 12)
-    $player = "anonymous";
-$score = intval($_GET['score']);
-$datoteka = fopen("pachigh.txt", "r");
-$current_highscore = intval(fgets($datoteka));
-fclose($datoteka);
-if ($score <= $current_highscore) {
-    ?>Sorry about that, but higher highscore has already been submitted!<?php
+        <?php
+        $player = $_GET['player'];
+        if (strpos($player, " ") !== FALSE || strpos($player, "<") !== FALSE || strpos($player, ">") !== FALSE || strpos($player, "&") !== FALSE || strlen($player) == 0 || strlen($player) > 12)
+            $player = "anonymous";
+        $score = intval($_GET['score']);
+        $datoteka = fopen("pachigh.txt", "r");
+        $current_highscore = intval(fgets($datoteka));
+        fclose($datoteka);
+        if ($score <= $current_highscore) {
+            ?>Sorry about that, but higher highscore has already been submitted!<?php
         } else {
             $hash1 = $_GET['hash'];
             if (is_numeric($score) && $score < 100000) {
@@ -64,11 +65,11 @@ if ($score <= $current_highscore) {
                         <script type="text/javascript">
                             window.close();
                         </script>
-                <?php
-            }
-        }
-    } else {
-        ?>
+                        <?php
+                    }
+                }
+            } else {
+                ?>
                 Server error!
                 <?php
             }
