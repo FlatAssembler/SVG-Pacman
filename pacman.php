@@ -886,6 +886,7 @@ CSS - https://www.w3schools.com/css/default.asp
                                             player.indexOf(" ") + 1 ||
                                             player.indexOf('"') + 1 ||
                                             player.indexOf("=") + 1 ||
+                                            player.indexOf("#") + 1 ||
                                             player.length > 12)
 
                                     );
