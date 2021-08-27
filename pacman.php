@@ -193,7 +193,14 @@ CSS - https://www.w3schools.com/css/default.asp
             <b>UPDATE</b> on 24/03/2021: I have added eyes on the ghosts<del>,
                 but that works only in Firefox</del>.<br />
             <b>UPDATE</b> on 27/03/2021: The eyes of the ghosts no longer rely
-            on the Firefox-specific SVG features.
+            on the Firefox-specific SVG features.<br/>
+            <b>UPDATE</b> on 27/08/2021: The server that SourceForge lets me use for free seems to
+            automatically insert (actually malformed by the HTTP standard) cookies into your browser
+            instead of using HTTP sessions when asked to use HTTP sessions (for highscores). I have tried
+            to solve that, but failed. If you are worried about being tracked using cookies, consult the
+            manual of your browser on how to delete those cookies, or use a browser that automatically
+            deletes cookies when they are no longer needed, such as the
+            <a href="https://torproject.org">TOR Browser</a> (which protects from far more than just cookies).
             <?php if ($highscore_cannot_be_opened): ?>
                 <br/>
                 <b>Server error</b>: We were not able to create the highscore file, so highscores will probably not work!
