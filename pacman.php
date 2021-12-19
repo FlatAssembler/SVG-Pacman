@@ -1115,9 +1115,15 @@ CSS - https://www.w3schools.com/css/default.asp
                 nextLevel();
         }
         function animationLoop() {
+            brojacAnimacijskePetlje++;
+            if (brojacAnimacijskePetlje >= 6) {
+                mainLoop();
+                return;
+            }
             if (brojacGlavnePetlje < 2)
                 return; //Ne pokusavaj animirati PacMana i duhove ako jos nisu nacrtani.
-            brojacAnimacijskePetlje++;
+            if (brojacAnimacijskePetlje >= 5)
+                mainLoop();
             for (var i = 0; i < 3; i++) {
                 if (
                         jeLiPacmanPojeoDuha[i] &&
@@ -1341,7 +1347,6 @@ CSS - https://www.w3schools.com/css/default.asp
             kolikoJePutaDuhPromijenioSmjer = 0;
             setTimeout(nestajanje, 500); //Neka natpis o tome na kojem smo levelu pocne iscezavati nakon 500 milisekundi.
             setTimeout(function () {
-                time1 = window.setInterval(mainLoop, 500);
                 time2 = window.setInterval(animationLoop, 100);
             }, 2000); //Neka se glavna i animacijska petlja pocnu vrtiti nakon 2000 milisekunda od trenutka kada prijedemo na novi level.
         }
