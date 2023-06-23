@@ -13,7 +13,7 @@ $_SESSION['second_random_number'] = rand(0, 50);
 ?>
 <!--
 Koristeni programski jezici i preporuceni materijali za ucenje:
-Javacript - https://www.w3schools.com/js/default.asp
+JavaScript - https://www.w3schools.com/js/default.asp
 SVG - https://www.w3schools.com/graphics/svg_intro.asp
 PHP (vrti se na serveru) - https://www.w3schools.com/php/default.asp
 HTML - https://www.w3schools.com/html/default.asp
@@ -21,7 +21,7 @@ CSS - https://www.w3schools.com/css/default.asp
 -->
 <html lang="en">
     <head>
-        <title>PacMan in Javacript</title>
+        <title>PacMan in JavaScript</title>
         <meta name="author" content="Teo Samarzija">
         <meta name="description"
               content="A PacMan game made using SVG and JavaScript, playable on most smartphones.">
