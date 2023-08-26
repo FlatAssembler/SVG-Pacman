@@ -198,9 +198,10 @@ CSS - https://www.w3schools.com/css/default.asp
             automatically insert (actually malformed by the HTTP standard) cookies into your browser
             instead of using HTTP sessions when asked to use HTTP sessions (for highscores). I have tried
             to solve that, but failed. If you are worried about being tracked using cookies, consult the
-            manual of your browser on how to delete those cookies, or use a browser that automatically
-            deletes cookies when they are no longer needed, such as the
+            manual of your browser on how to delete those cookies. Or, better yet, use a browser that
+            automatically deletes cookies when they are no longer needed, such as the
             <a href="https://torproject.org">TOR Browser</a> (which protects from far more than just cookies).
+            Remember, it is much better to protect yourself using technology than to rely on laws.
             <?php if ($highscore_cannot_be_opened): ?>
                 <br/>
                 <b>Server error</b>: We were not able to create the highscore file, so highscores will probably not work!
