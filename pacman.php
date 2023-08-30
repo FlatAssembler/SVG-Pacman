@@ -190,10 +190,14 @@ CSS - https://www.w3schools.com/css/default.asp
             below the maze. On computers, it's playable by mouse.<br />You can
             see the source code, with the comments in Croatian, <a
                 href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.php">here</a>.<br/>
+                <?php if (strpos($browser,"Firefox")):?>
+                  <b>UPDATE</b> on 24/03/2021: I have added eyes on the ghosts.<br/>
+                <?php else: ?>
             <b>UPDATE</b> on 24/03/2021: I have added eyes on the ghosts<del>,
                 but that works only in Firefox</del>.<br />
             <b>UPDATE</b> on 27/03/2021: The eyes of the ghosts no longer rely
             on the Firefox-specific SVG features.<br/>
+          <?php endif; ?>
             <b>UPDATE</b> on 27/08/2021: The server that SourceForge lets me use for free seems to
             automatically insert (actually malformed by the HTTP standard) cookies into your browser
             instead of using HTTP sessions when asked to use HTTP sessions (for highscores). I have tried
