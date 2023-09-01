@@ -190,8 +190,8 @@ CSS - https://www.w3schools.com/css/default.asp
             below the maze. On computers, it's playable by mouse.<br />You can
             see the source code, with the comments in Croatian, <a
                 href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.php">here</a>.<br/>
-                <?php if (strpos($browser,"Firefox")):?>
-                  <b>UPDATE</b> on 24/03/2021: I have added eyes on the ghosts.<br/>
+                <?php if (strpos($browser,"Firefox") !== FALSE):?>
+            <b>UPDATE</b> on 24/03/2021: I have added eyes on the ghosts.<br/>
                 <?php else: ?>
             <b>UPDATE</b> on 24/03/2021: I have added eyes on the ghosts<del>,
                 but that works only in Firefox</del>.<br />
